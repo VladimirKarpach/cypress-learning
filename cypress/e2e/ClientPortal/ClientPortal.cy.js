@@ -251,7 +251,7 @@ describe("Client Portal", function(){
         //Go to All Work Requests page
         cy.get('a[class="sc-bczRLJ hgBxOv"]').contains('Work Requests').click()
 
-        //Find and open needed Work request
+        //Find and open needed Work request. Test push
         cy.get('button[class="sc-hAZoDl icfOxT btn btn-light"]').contains('Search').click()
         cy.wait(5000)
         cy.get('input[class="sc-fbPSWO hQRRvE"]').type(woName)
