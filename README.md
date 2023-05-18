@@ -1,6 +1,6 @@
 Push to GitHub
 
-git add -A
+git add filename.extension
 
 git commit -m 'Changes'
 
