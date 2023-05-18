@@ -37,14 +37,14 @@ describe("Client Portal", function(){
         return false
       })
 
-    it("Sign in", function(){
+    it("Sign in/out", function(){
         
         cy.visit('/')
 
         // check all elements on the page
         cy.get('label[for="sign-in-email"]').should('contain', 'Email Address')
         cy.get('label[for="sign-in-password"]').should('contain', 'Password')
-        cy.get('button[class="sc-hAZoDl icfOxT btn btn-light"]').should('contain', 'Forgot your password?')
+        cy.get('button[class="sc-hAZoDl fBdZfv btn btn-light"]').should('contain', 'Forgot your password?')
         cy.get('button[type="submit"]').should('contain', 'Sign In')
 
         // check error message if user doesn't have Manager or Client role
@@ -69,10 +69,11 @@ describe("Client Portal", function(){
         cy.get('input[type="email"]').clear().type(correctClientMail)
         cy.get('input[type="password"]').clear().type(correctPasswordCleint)
         cy.get('button[type="submit"]').click()
-        cy.get('label[class="sc-eTtvFv ievaFl"]').should('contain', clientUserName)
+        cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').should('contain', clientUserName)
 
         // sign out
-        cy.get('[class="sc-iQJPop dfUhgN active"][href="/"]').click()
+        cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').should('contain', clientUserName).click()
+        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Sign Out').click()
         cy.get('label[for="sign-in-email"]').should('contain', 'Email Address')
         cy.get('label[for="sign-in-password"]').should('contain', 'Password')
     })
@@ -85,11 +86,11 @@ describe("Client Portal", function(){
         // check page elements
         cy.get('label[class="sc-ivTmOn hFGKCp"]').should('contain', 'Forgot Your Password?')
         cy.get('label[class="sc-cxabCf htiFkT"]').should('contain', 'Please enter your Email Address and we will send you the instructions on how to reset your password.')
-        cy.get('button[class="sc-hAZoDl icfOxT btn btn-light"]').should('contain', 'Back to Sign In')
+        cy.get('button[class="sc-hAZoDl fBdZfv btn btn-light"]').should('contain', 'Back to Sign In')
         cy.get('button[type="submit"]').should('contain', 'Send Instructions')
 
         // check Back to Sign In
-        cy.get('button[class="sc-hAZoDl icfOxT btn btn-light"]').click()
+        cy.get('button[class="sc-hAZoDl fBdZfv btn btn-light"]').click()
         cy.get('label[for="sign-in-email"]').should('contain', 'Email Address')
         cy.get('label[for="sign-in-password"]').should('contain', 'Password')
     })
@@ -104,7 +105,8 @@ describe("Client Portal", function(){
         cy.get('button[type="submit"]').click()
 
         // go to appropriated page
-        cy.get('a[class="sc-iQJPop dfUhgN"][href="/change-password"]').click()
+        cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').click()
+        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Password').click()
 
         //  Errors. Wrong current password
         cy.get('input#change-current-password').type(correctNewPasswordClient)
@@ -196,7 +198,8 @@ describe("Client Portal", function(){
         cy.get('button[type="submit"]').click()
 
         // go to appropriated page
-        cy.get('a[class="sc-iQJPop dfUhgN"][href="/change-password"]').click()
+        cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').click()
+        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Password').click()
 
         //check the page elements
         cy.get('label[class="sc-cCsOjp jGKeAu"]').should('contain', 'Change Password')
@@ -217,7 +220,8 @@ describe("Client Portal", function(){
         cy.get('[role="alert"]').should('contain', successPasswordChanged)
 
         //  sign out and check password was changed in the KORi DB
-        cy.get('[class="sc-iQJPop dfUhgN"]').click()
+        cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').should('contain', clientUserName).click()
+        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Sign Out').click()
 
         //  check Previous Password
         cy.get('input[type="email"]').type(correctClientMail)
@@ -229,17 +233,21 @@ describe("Client Portal", function(){
         cy.get('input[type="email"]').clear().type(correctClientMail)
         cy.get('input[type="password"]').clear().type(correctNewPasswordClient)
         cy.get('button[type="submit"]').click()
-        cy.get('label[class="sc-eTtvFv ievaFl"]').should('contain', clientUserName)
+        cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').should('contain', clientUserName)
 
         //  return default password
-        cy.get('a[class="sc-iQJPop dfUhgN"][href="/change-password"]').click()
+        cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').click()
+        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Password').click()
         cy.get('input#change-current-password').type(correctNewPasswordClient)
         cy.get('input#reset-new-password').type(correctPasswordCleint)
         cy.get('input#reset-rep-password').type(correctPasswordCleint)
         cy.get('button[type="submit"]').click()
+        cy.get('[role="alert"]').should('contain', successPasswordChanged)
+        cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').should('contain', clientUserName).click()
+        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Sign Out').click()
     })
 
-    it.only('Check  View Ticket Details page', () => {
+    it('Check  View Ticket Details page', () => {
 
         cy.visit('/')
 
@@ -248,16 +256,41 @@ describe("Client Portal", function(){
         cy.get('input[type="password"]').clear().type(correctPasswordCleint)
         cy.get('button[type="submit"]').click()
 
-        //Go to All Work Requests page
-        cy.get('a[class="sc-bczRLJ hgBxOv"]').contains('Work Requests').click()
+        //  Go to All Work Requests page
+        cy.get('div[class="sc-iMJOuO iIDOAs"]').contains('Work Requests').click()
 
-        //Find and open needed Work request
-        cy.get('button[class="sc-hAZoDl icfOxT btn btn-light"]').contains('Search').click()
+        //  Find and open needed Work request
+        cy.get('button[class="sc-hAZoDl fBdZfv btn btn-light"]').contains('Search').click()
         cy.wait(5000)
         cy.get('input[class="sc-fbPSWO hQRRvE"]').type(woName)
-        cy.get('button[class="sc-hAZoDl icfOxT btn btn-light"]').contains('Apply Search').click()
+        cy.get('button[class="sc-hAZoDl fBdZfv btn btn-light"]').contains('Apply Search').click()
         cy.wait(1000)
         cy.get('tr[class="sc-jQHtVU cjdcOE"]').contains('td', woName).click()
+
+        //  Check page objects
+        cy.get('div[class="sc-djvmMF jyOOKp"]').should('contain', 'View Work Request Details')
+        
+        //  Check labels
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Name').should('contain', 'Work Request Name:')
+        cy.get('div[class="sc-ewDcJz TEBtv"]').contains('Child'). should('contain', 'Child Work Requests:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Time'). should('contain', 'Creation Time:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Status').should('contain', 'Status:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Service').should('contain', 'Service Type:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Classification').should('contain', 'Classification:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Work Type').should('contain', 'Work Type:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Priority').should('contain', 'Priority Level:')
+        cy.get('div[class="sc-ewDcJz TEBtv"]').contains('Child'). should('contain', 'Child Work Requests:')
+        cy.get('div[class="sc-ewDcJz jZnTTx"]').contains('Location').should('contain', 'Location:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Target Start').should('contain', 'Target Start:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Target Finish').should('contain', 'Target Finish:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('First Name').should('contain', 'Requestor First Name:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Last Name').should('contain', 'Requestor Last Name:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Phone').should('contain', 'Requestor Phone No:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Email').should('contain', 'Requestor Email:')
+        cy.get('div[class="sc-ktCSKO gJgzNM"]').contains('Description').should('contain', 'Description')
+        // cy.get('label').contains('Photos').should('contain', 'Photos:').should('contains', '(optional)')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Attachments').should('contain', 'Attachments:')
+
 
     })
 })
