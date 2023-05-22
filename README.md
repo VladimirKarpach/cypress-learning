@@ -4,4 +4,4 @@ git add filename.extension
 
 git commit -m 'Changes'
 
-git push -u -f origin main
+git push -u -f origin master
