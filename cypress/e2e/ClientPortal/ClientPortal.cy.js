@@ -9,6 +9,7 @@ let errorWrongCurrentPass = 'The entered current password is incorrect. Please t
 let errorConfirmationPassMismatch = 'The password confirmation does not match the new password.'
 let errorWrongNewPass = 'New password should meet the requirements: at least 8 characters, at least one uppercase letter, one lowercase letter and one number, not too obvious (like your name).'
 let successPasswordChanged = 'Password successfully changed!'
+let successSentChangedPassword = 'Password reset instructions successfully sent. Please, check your email.'
 
 let wrongPassLowerNumbers = 'testpass1'
 let wrongPassUpperNumbers = 'TESTPASS1'
@@ -30,6 +31,8 @@ let clientUserName = 'Cypress Auto'
 
 let woName = 'Parent Work Request'
 
+let woNameNew = 'Test Work Request'
+
 describe("Client Portal", function(){
 
     //  Ignore errors in Console
@@ -46,6 +49,15 @@ describe("Client Portal", function(){
         cy.get('label[for="sign-in-password"]').should('contain', 'Password')
         cy.get('button[class="sc-hAZoDl fBdZfv btn btn-light"]').should('contain', 'Forgot your password?')
         cy.get('button[type="submit"]').should('contain', 'Sign In')
+
+        //  check fields are required
+        cy.get('input[type="email"]').type(notManagerOrClietMail)
+        cy.get('button[type="submit"]').should('be.disabled')
+        cy.get('input[type="email"]').clear()
+        
+        cy.get('input[type="password"]').type(correctPassForNotManagerOrCleint)
+        cy.get('button[type="submit"]').should('be.disabled')
+        cy.get('input[type="password"]').clear()
 
         // check error message if user doesn't have Manager or Client role
         cy.get('input[type="email"]').type(notManagerOrClietMail)
@@ -89,24 +101,52 @@ describe("Client Portal", function(){
         cy.get('button[class="sc-hAZoDl fBdZfv btn btn-light"]').should('contain', 'Back to Sign In')
         cy.get('button[type="submit"]').should('contain', 'Send Instructions')
 
+        // check required fields
+        cy.get('button[type="submit"]').should('be.disabled')
+        cy.get('input[type="email"]').type(correctClientMail)
+        cy.get('button[type="submit"]').should('not.be.disabled')
+
+        //check message was sent
+        cy.get('button[type="submit"]').click()
+        cy.get('[role="alert"]').should('contain', successSentChangedPassword)
+
         // check Back to Sign In
-        cy.get('button[class="sc-hAZoDl fBdZfv btn btn-light"]').click()
+        cy.get('button[class="sc-hAZoDl fBdZfv btn btn-light"]').contains('Back to Sign In').click()
         cy.get('label[for="sign-in-email"]').should('contain', 'Email Address')
         cy.get('label[for="sign-in-password"]').should('contain', 'Password')
     })
 
-    it('Change Password. Errors block', () => {
+    it.only('Change Password. Errors block', () => {
 
         cy.visit('/')
 
         //Sign in
-        cy.get('input[type="email"]').clear().type(correctClientMail)
-        cy.get('input[type="password"]').clear().type(correctPasswordCleint)
+        cy.get('input[type="email"]').type(correctClientMail)
+        cy.get('input[type="password"]').type(correctPasswordCleint)
         cy.get('button[type="submit"]').click()
 
         // go to appropriated page
         cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').click()
         cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Password').click()
+
+        // check required fields        
+        cy.get('input#reset-new-password').type(correctNewPasswordClient)
+        cy.get('input#reset-rep-password').type(correctNewPasswordClient)
+        cy.get('button[type="submit"]').should('be.disabled')
+        cy.get('input#reset-new-password').clear()
+        cy.get('input#reset-rep-password').clear()
+
+        cy.get('input#change-current-password').type(correctNewPasswordClient)        
+        cy.get('input#reset-rep-password').type(correctNewPasswordClient)
+        cy.get('button[type="submit"]').should('be.disabled')
+        cy.get('input#change-current-password').clear()      
+        cy.get('input#reset-rep-password').clear()
+
+        cy.get('input#change-current-password').type(correctNewPasswordClient)
+        cy.get('input#reset-new-password').type(correctNewPasswordClient)
+        cy.get('button[type="submit"]').should('be.disabled')
+        cy.get('input#change-current-password').clear()
+        cy.get('input#reset-new-password').clear()        
 
         //  Errors. Wrong current password
         cy.get('input#change-current-password').type(correctNewPasswordClient)
@@ -292,5 +332,36 @@ describe("Client Portal", function(){
         cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Attachments').should('contain', 'Attachments:')
 
 
+    })
+
+    it('Create a Work Request', () => {
+        cy.visit('/')
+
+        //Sign in
+        cy.get('input[type="email"]').clear().type(correctClientMail)
+        cy.get('input[type="password"]').clear().type(correctPasswordCleint)
+        cy.get('button[type="submit"]').click()
+
+        cy.get('[class="sc-gCLdxd eerNfo"]').contains('Work Requests').click()
+        cy.get('[class="sc-bczRLJ ecQjpe"]').contains('Janitorial').click()
+        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, {force:true})
+        //cy.contains('div', 'Classification:').find('span').click()
+        cy.contains('div', 'Radio button').find('[type="radio"]').then( radioBurrons => {
+            cy.wrap(radioBurrons)
+                .first()
+                .check({force:true})
+                .should('be.checked')
+
+            cy.wrap(radioBurrons)
+                .eq(1)
+                .check({force:true})
+                .should('be.checked')
+
+            cy.wrap(radioBurrons)
+                .first()
+                .should('not.be.checked')
+        })
+
+        cy.contains('button', 'Confirm').should('be.disabled')
     })
 })
