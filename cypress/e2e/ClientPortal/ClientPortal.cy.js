@@ -85,7 +85,7 @@ describe("Client Portal", function(){
 
         // sign out
         cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').should('contain', clientUserName).click()
-        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Sign Out').click()
+        cy.contains('a', 'Sign Out').click()
         cy.get('label[for="sign-in-email"]').should('contain', 'Email Address')
         cy.get('label[for="sign-in-password"]').should('contain', 'Password')
     })
@@ -108,6 +108,7 @@ describe("Client Portal", function(){
 
         //check message was sent
         cy.get('button[type="submit"]').click()
+        cy.wait(5000)
         cy.get('[role="alert"]').should('contain', successSentChangedPassword)
 
         // check Back to Sign In
@@ -127,7 +128,7 @@ describe("Client Portal", function(){
 
         // go to appropriated page
         cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').click()
-        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Password').click()
+        cy.contains('a','Password').click()
 
         // check required fields        
         cy.get('input#reset-new-password').type(correctNewPasswordClient)
@@ -239,7 +240,7 @@ describe("Client Portal", function(){
 
         // go to appropriated page
         cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').click()
-        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Password').click()
+        cy.contains('a', 'Password').click()
 
         //check the page elements
         cy.get('label[class="sc-cCsOjp jGKeAu"]').should('contain', 'Change Password')
@@ -261,7 +262,7 @@ describe("Client Portal", function(){
 
         //  sign out and check password was changed in the KORi DB
         cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').should('contain', clientUserName).click()
-        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Sign Out').click()
+        cy.contains('a', 'Sign Out').click()
 
         //  check Previous Password
         cy.get('input[type="email"]').type(correctClientMail)
@@ -277,14 +278,15 @@ describe("Client Portal", function(){
 
         //  return default password
         cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').click()
-        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Password').click()
+        cy.contains('a', 'Password').click()
         cy.get('input#change-current-password').type(correctNewPasswordClient)
         cy.get('input#reset-new-password').type(correctPasswordCleint)
         cy.get('input#reset-rep-password').type(correctPasswordCleint)
         cy.get('button[type="submit"]').click()
+        cy.wait(3000)
         cy.get('[role="alert"]').should('contain', successPasswordChanged)
         cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').should('contain', clientUserName).click()
-        cy.get('a[class="sc-DdwlG bwabSi dropdown-item"]').contains('Sign Out').click()
+        cy.contains('a', 'Sign Out').click()
     })
 
     it('Check  View Ticket Details page', () => {
@@ -297,7 +299,7 @@ describe("Client Portal", function(){
         cy.get('button[type="submit"]').click()
 
         //  Go to All Work Requests page
-        cy.get('div[class="sc-iMJOuO iIDOAs"]').contains('Work Requests').click()
+        cy.contains('label', 'Work Requests').click()
 
         //  Find and open needed Work request
         cy.get('button[class="sc-hAZoDl fBdZfv btn btn-light"]').contains('Search').click()
@@ -334,7 +336,7 @@ describe("Client Portal", function(){
 
     })
 
-    it.only('Create a Work Request', () => {
+    it('Create a Work Request', () => {
         cy.visit('/')
 
         //  Sign in
@@ -502,7 +504,7 @@ describe("Client Portal", function(){
         cy.contains('button', 'Confirm').should('be.disabled')
         cy.reload()
 
-        // fill out all fields
+        // fill out all fields and Confirm
         cy.contains('div', 'Work Request Name').find('input').type(woNameNew, {force:true})
         cy.contains('div', 'Work Request Name:').find('input')
         cy.contains('div', 'Classification:').find('span').click()
@@ -526,11 +528,6 @@ describe("Client Portal", function(){
             .eq(0)
             .click()
         cy.contains('div', 'Description:').find('textarea').type('Test description')
-        cy.contains('button', 'Confirm').click().then(confirmation => {
-
-        })
-
-        
-        //cy.contains('button', 'Confirm').should('be.disabled')
+        cy.contains('button', 'Confirm').click()
     })
 })
