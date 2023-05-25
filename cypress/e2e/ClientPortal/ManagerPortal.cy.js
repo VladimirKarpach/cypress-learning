@@ -177,6 +177,12 @@ describe ('Manager Portal', function(){
       })
     
     //  Check the Client Info page styles
+    cy.get('div[class="sc-eCOUaW cyOYLy nav-item"]')
+      .find('a')
+      .contains('General Info')
+      .invoke('attr', 'aria-selected')
+      .should('eq', 'true')
+
     cy.get('div[class="sc-fjOrxA gjKWjZ"]')
       .should('have.css', 'background-color', 'rgb(225, 225, 225)')
     cy.get('div[class="sc-fjOrxA gjKWjZ"]')
@@ -232,5 +238,8 @@ describe ('Manager Portal', function(){
         cy.wrap(unselected)
           .should('have.css', 'background-color', 'rgb(255, 255, 255)')
       })
+
+
+      
   }) 
 })
