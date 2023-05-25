@@ -6,6 +6,12 @@ let oldPass
 
 let successPasswordChanged = 'Password successfully changed!'
 
+function signIn (){
+  cy.get('input[type="email"]').type(login)
+  cy.get('input[type="password"]').type(currPass)
+  cy.get('button[type="submit"]').click()
+}
+
 
 
 describe ('Manager Portal', function(){
@@ -14,10 +20,7 @@ describe ('Manager Portal', function(){
     //Open site
     cy.visit('/')
 
-    //Sign In
-    cy.get('input[type="email"]').type(login)
-    cy.get('input[type="password"]').type(currPass)
-    cy.get('button[type="submit"]').click()
+    signIn()
 
     //Sign Out
     cy.get('div[class="dropdown"]').find('button').click()
@@ -29,10 +32,7 @@ describe ('Manager Portal', function(){
       //Open site
       cy.visit('/')
 
-      //Sign In
-      cy.get('input[type="email"]').type(login)
-      cy.get('input[type="password"]').type(currPass)
-      cy.get('button[type="submit"]').click()
+      signIn()
 
       //Change password
       cy.get('div[class="dropdown"]').find('button').click()
@@ -72,15 +72,12 @@ describe ('Manager Portal', function(){
       cy.get('[role="alert"]').should('contain', successPasswordChanged)
   })
 
-  it.only('Check styles', function(){
+  it('Check styles', function(){
     
     cy.visit('/')
 
-    //  Sign In
-    cy.get('input[type="email"]').type(login)
-    cy.get('input[type="password"]').type(currPass)
-    cy.get('button[type="submit"]').click()
-
+    signIn()
+    
     //  Left menu
     cy.get('nav[class="sc-bgrGEg cMzWIl"]').then( navigationMenu => {
       cy.wrap(navigationMenu)
@@ -116,4 +113,124 @@ describe ('Manager Portal', function(){
 
     })
   })
+
+  it.only('Check clients tabel', function (){
+     // Open site
+     cy.visit('/')
+
+     signIn()
+
+    // Navigate to page
+     cy.get('a[class="sc-iMJOuO egWhhn"]').contains('Clients').click()
+
+     // Navigation bar
+     cy.get('div[class="sc-gKXOVf hyloqv"]').find('a')
+      .eq(0)
+      .should('contain', 'Home')
+    cy.get('div[class="sc-gKXOVf hyloqv"]').find('a')
+      .eq(1)
+      .should('contain', 'Clients')
+    cy.get('div[class="sc-gKXOVf hyloqv"]').find('a')
+      .contains('Home')
+      .click()
+    cy.get('div[class="sc-gKXOVf hyloqv"]').find('a')
+      .eq(0)
+      .should('contain', 'Home')
+      cy.get('div[class="sc-gKXOVf hyloqv"]').find('a')
+      .eq(1)
+      .should('not.exist')
+
+    //  Cleints tabel header
+    cy.get('a[class="sc-iMJOuO egWhhn"]').contains('Clients').click()
+    cy.get('tr[class="sc-dsQDmV ksGquX"]').then(tableHeader => {
+      cy.wrap(tableHeader).should('have.css', 'background-color', 'rgb(203, 203, 203)')
+      cy.wrap(tableHeader).find('th').each(label => {
+        
+        let labelText = label.text().trim()
+        
+        let text = {
+          "Logo": "Logo",
+          "Name": "Name",
+          "Time Zone": "Time Zone"
+        }
+
+        cy.wrap(label).should('have.css', 'font-size', '18px')
+          .and('have.css', 'color', 'rgb(85, 85, 85)')
+          .and('contain', text[labelText])
+      })
+    })
+
+    //  Redirect to the correct client info     
+    cy.get('table[class="sc-bUbCnL fvwMww"]').find('tr')
+      .eq(1)
+      .find('td')
+      .eq(1).then(clientName => {
+        const clName = clientName.text().trim()
+        cy.wrap(clientName)
+          .click()
+        cy.get('div[class="sc-gKXOVf hyloqv"]').find('a')
+          .eq(2)
+          .should('contain', clName)
+        cy.get('div[class="sc-fjOrxA gjKWjZ"]')
+          .find('p')
+          .should('contain', clName)
+      })
+    
+    //  Check the Client Info page styles
+    cy.get('div[class="sc-fjOrxA gjKWjZ"]')
+      .should('have.css', 'background-color', 'rgb(225, 225, 225)')
+    cy.get('div[class="sc-fjOrxA gjKWjZ"]')
+      .find('p')
+      .should('have.css', 'font-size', '20px')
+      .and('have.css', 'color', 'rgb(85, 85, 85)')
+    cy.get('div[class="sc-ivmvlL caRrtz"]')
+      .find('button').each( (buttonName, index) =>{
+
+        let btnName = index.toString()
+        
+        let text = {
+          "0":"Close without Saving",
+          "1":"Save and Continue Editing",
+          "2":"Save and Close"
+        }
+
+        cy.wrap(buttonName)
+          .should('have.css', 'font-size', '14px')
+          .and('contain', text[index])
+        if (index < 2){
+          cy.wrap(buttonName)
+          .should('have.css', 'text-decoration', 'underline solid rgb(85, 85, 85)')
+        }
+        cy.get('div[class="sc-ivmvlL caRrtz"]')
+        .find('button')
+        .eq(2)
+        .should('have.css', 'background-color', 'rgb(185, 224, 165)')
+      })
+    cy.get('[class="sc-eCOUaW cyOYLy nav-item"]')
+      .find('a').each((navElement, index) =>{
+        let elName = navElement.text().trim()
+
+        let text = {
+          "0":"General Info",
+          "1":"Info Messages",
+          "2":"Time & Attendance",
+          "3":"Locations"
+        }
+
+        cy.wrap(navElement)
+          .should('have.css', 'font-size', '16px')
+          .and('have.css', 'color', 'rgb(85, 85, 85)')
+          .and('contain', text[index])
+      })
+    cy.get('[class="sc-eCOUaW cyOYLy nav-item"]')
+      .find('a[aria-selected="false"]').each(unselected =>{
+        cy.wrap(unselected)
+          .should('have.css', 'background-color', 'rgb(225, 225, 225)')
+      })
+    cy.get('[class="sc-eCOUaW cyOYLy nav-item"]')
+      .find('a[aria-selected="true"]').each(unselected =>{
+        cy.wrap(unselected)
+          .should('have.css', 'background-color', 'rgb(255, 255, 255)')
+      })
+  }) 
 })
