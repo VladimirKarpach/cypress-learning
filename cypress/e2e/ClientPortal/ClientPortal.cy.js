@@ -33,6 +33,12 @@ let woName = 'Parent Work Request'
 
 let woNameNew = 'Test Work Request'
 
+function signIn() {
+    cy.get('input[type="email"]').clear().type(correctClientMail)
+    cy.get('input[type="password"]').clear().type(correctPasswordCleint)
+    cy.get('button[type="submit"]').click()
+}
+
 describe("Client Portal", function(){
 
     //  Ignore errors in Console
@@ -78,9 +84,7 @@ describe("Client Portal", function(){
         cy.get('[role="alert"]').should('contain',wrongPasswordMessage)
 
         // correct credentials
-        cy.get('input[type="email"]').clear().type(correctClientMail)
-        cy.get('input[type="password"]').clear().type(correctPasswordCleint)
-        cy.get('button[type="submit"]').click()
+        signIn()
         cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').should('contain', clientUserName)
 
         // sign out
@@ -121,10 +125,7 @@ describe("Client Portal", function(){
 
         cy.visit('/')
 
-        //Sign in
-        cy.get('input[type="email"]').type(correctClientMail)
-        cy.get('input[type="password"]').type(correctPasswordCleint)
-        cy.get('button[type="submit"]').click()
+        signIn()
 
         // go to appropriated page
         cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').click()
@@ -233,10 +234,7 @@ describe("Client Portal", function(){
     it('Change password. Correct Input', () => {
         cy.visit('/')
 
-        //Sign in
-        cy.get('input[type="email"]').clear().type(correctClientMail)
-        cy.get('input[type="password"]').clear().type(correctPasswordCleint)
-        cy.get('button[type="submit"]').click()
+        signIn()
 
         // go to appropriated page
         cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').click()
@@ -293,10 +291,7 @@ describe("Client Portal", function(){
 
         cy.visit('/')
 
-        //  Sign in
-        cy.get('input[type="email"]').clear().type(correctClientMail)
-        cy.get('input[type="password"]').clear().type(correctPasswordCleint)
-        cy.get('button[type="submit"]').click()
+        signIn()
 
         //  Go to All Work Requests page
         cy.contains('label', 'Work Requests').click()
@@ -339,10 +334,7 @@ describe("Client Portal", function(){
     it('Create a Work Request', () => {
         cy.visit('/')
 
-        //  Sign in
-        cy.get('input[type="email"]').clear().type(correctClientMail)
-        cy.get('input[type="password"]').clear().type(correctPasswordCleint)
-        cy.get('button[type="submit"]').click()
+        signIn()
 
         // go to New Work Request page
         cy.get('[class="sc-fVLGaz glDEhv"]').contains('Work Requests').click()
