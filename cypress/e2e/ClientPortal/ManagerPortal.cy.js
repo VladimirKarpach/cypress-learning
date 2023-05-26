@@ -72,7 +72,7 @@ describe ('Manager Portal', function(){
       cy.get('[role="alert"]').should('contain', successPasswordChanged)
   })
 
-  it('Check styles', function(){
+  it.only('Check styles', function(){
     
     cy.visit('/')
 
@@ -104,17 +104,22 @@ describe ('Manager Portal', function(){
         .and('have.css', 'border-bottom', '0.8px solid rgb(232, 232, 232)')
 
       //  Footer
+      let year = new Date().getFullYear()
+      console.log(year)
+      let footerText = 'Copyright ' +year+ ' Kleenway Building Maintenance Inc. | All Rights Reserved'
+      console.log(footerText)
+
       cy.get('footer')
         .should('have.css', 'background-color', 'rgb(249, 249, 249)')
         .find('label')
-        .should('contain', 'Copyright 2023 Kleenway Building Maintenance Inc. | All Rights Reserved')
+        .should('contain', footerText)
         .should('have.css', 'font-size', '10px')
         .and('have.css', 'color', 'rgb(180, 180, 180)')
 
     })
   })
 
-  it.only('Check clients tabel', function (){
+  it('Check clients tabel', function (){
      // Open site
      cy.visit('/')
 
