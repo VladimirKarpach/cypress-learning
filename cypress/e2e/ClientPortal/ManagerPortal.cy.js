@@ -72,7 +72,7 @@ describe ('Manager Portal', function(){
       cy.get('[role="alert"]').should('contain', successPasswordChanged)
   })
 
-  it.only('Check styles', function(){
+  it('Check styles', function(){
     
     cy.visit('/')
 
@@ -98,6 +98,8 @@ describe ('Manager Portal', function(){
         .find('label')
         .should('have.css', 'color', 'rgb(108, 108, 108)')
       })
+      cy.get('div[class="sc-fVLGaz hSTNxA"]')
+        .should('contain', 'Home')
 
       //  Header
       cy.get('.cMKwJU').should('have.css', 'background', 'rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box')
@@ -127,6 +129,8 @@ describe ('Manager Portal', function(){
 
     // Navigate to page
      cy.get('a[class="sc-iMJOuO egWhhn"]').contains('Clients').click()
+     cy.get('div[class="sc-fVLGaz hSTNxA"]')
+      .should('contain', 'Clients')
 
      // Navigation bar
      cy.get('div[class="sc-gKXOVf hyloqv"]').find('a')
