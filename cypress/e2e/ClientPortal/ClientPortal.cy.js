@@ -39,15 +39,15 @@ function signIn() {
     cy.get('button[type="submit"]').click()
 }
 
-describe("Client Portal", function(){
+describe("Client Portal", function () {
 
     //  Ignore errors in Console
     Cypress.on('uncaught:exception', (err, runnable) => {
         return false
-      })
+    })
 
-    it("Sign in/out", function(){
-        
+    it("Sign in/out", function () {
+
         cy.visit('/')
 
         // check all elements on the page
@@ -60,7 +60,7 @@ describe("Client Portal", function(){
         cy.get('input[type="email"]').type(notManagerOrClietMail)
         cy.get('button[type="submit"]').should('be.disabled')
         cy.get('input[type="email"]').clear()
-        
+
         cy.get('input[type="password"]').type(correctPassForNotManagerOrCleint)
         cy.get('button[type="submit"]').should('be.disabled')
         cy.get('input[type="password"]').clear()
@@ -81,7 +81,7 @@ describe("Client Portal", function(){
         cy.get('input[type="email"]').clear().type(correctClientMail)
         cy.get('input[type="password"]').clear().type(wrongPassword)
         cy.get('button[type="submit"]').click()
-        cy.get('[role="alert"]').should('contain',wrongPasswordMessage)
+        cy.get('[role="alert"]').should('contain', wrongPasswordMessage)
 
         // correct credentials
         signIn()
@@ -129,7 +129,7 @@ describe("Client Portal", function(){
 
         // go to appropriated page
         cy.get('button[class="sc-igHpSv efYDaS dropdown-toggle btn btn-primary"]').click()
-        cy.contains('a','Password').click()
+        cy.contains('a', 'Password').click()
 
         // check required fields        
         cy.get('input#reset-new-password').type(correctNewPasswordClient)
@@ -138,17 +138,17 @@ describe("Client Portal", function(){
         cy.get('input#reset-new-password').clear()
         cy.get('input#reset-rep-password').clear()
 
-        cy.get('input#change-current-password').type(correctNewPasswordClient)        
+        cy.get('input#change-current-password').type(correctNewPasswordClient)
         cy.get('input#reset-rep-password').type(correctNewPasswordClient)
         cy.get('button[type="submit"]').should('be.disabled')
-        cy.get('input#change-current-password').clear()      
+        cy.get('input#change-current-password').clear()
         cy.get('input#reset-rep-password').clear()
 
         cy.get('input#change-current-password').type(correctNewPasswordClient)
         cy.get('input#reset-new-password').type(correctNewPasswordClient)
         cy.get('button[type="submit"]').should('be.disabled')
         cy.get('input#change-current-password').clear()
-        cy.get('input#reset-new-password').clear()        
+        cy.get('input#reset-new-password').clear()
 
         //  Errors. Wrong current password
         cy.get('input#change-current-password').type(correctNewPasswordClient)
@@ -165,7 +165,7 @@ describe("Client Portal", function(){
         cy.get('button[type="submit"]').click()
         cy.get('[role="alert"]').should('contain', errorConfirmationPassMismatch)
         cy.reload(true)
-        
+
         //  Errors. Lowercase and numbers
         cy.get('input#change-current-password').type(correctPasswordCleint)
         cy.get('input#reset-new-password').type(wrongPassLowerNumbers)
@@ -230,7 +230,7 @@ describe("Client Portal", function(){
         cy.get('[role="alert"]').should('contain', errorWrongNewPass)
         cy.reload(true)
     })
-    
+
     it('Change password. Correct Input', () => {
         cy.visit('/')
 
@@ -244,8 +244,8 @@ describe("Client Portal", function(){
         cy.get('label[class="sc-cCsOjp jGKeAu"]').should('contain', 'Change Password')
         cy.get('label[class="sc-ciZhAO jolbHO"]').should('contain', 'To make your account secure, make sure your new password:')
         cy.contains('li', 'is at least 8 characters long').should('contain', 'is at least 8 characters long')
-        cy.contains('li','has at least one uppercase letter, one lowercase letter and one number').should('contain', 'has at least one uppercase letter, one lowercase letter and one number')
-        cy.contains('li','is not too obvious, like your name').should('contain', 'is not too obvious, like your name')
+        cy.contains('li', 'has at least one uppercase letter, one lowercase letter and one number').should('contain', 'has at least one uppercase letter, one lowercase letter and one number')
+        cy.contains('li', 'is not too obvious, like your name').should('contain', 'is not too obvious, like your name')
         cy.get('label[for="change-current-password"]').should('contain', 'Current Password')
         cy.get('label[for="reset-new-password"]').should('contain', 'New Password')
         cy.get('label[for="reset-rep-password"]').should('contain', 'Confirm New Password')
@@ -266,7 +266,7 @@ describe("Client Portal", function(){
         cy.get('input[type="email"]').type(correctClientMail)
         cy.get('input[type="password"]').type(correctPasswordCleint)
         cy.get('button[type="submit"]').click()
-        cy.get('[role="alert"]').should('contain',wrongPasswordMessage)
+        cy.get('[role="alert"]').should('contain', wrongPasswordMessage)
 
         //  check new password
         cy.get('input[type="email"]').clear().type(correctClientMail)
@@ -306,17 +306,17 @@ describe("Client Portal", function(){
 
         //  Check page objects
         cy.get('div[class="sc-djvmMF jyOOKp"]').should('contain', 'View Work Request Details')
-        
+
         //  Check labels
         cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Name').should('contain', 'Work Request Name:')
-        cy.get('div[class="sc-ewDcJz TEBtv"]').contains('Child'). should('contain', 'Child Work Requests:')
-        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Time'). should('contain', 'Creation Time:')
+        cy.get('div[class="sc-ewDcJz TEBtv"]').contains('Child').should('contain', 'Child Work Requests:')
+        cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Time').should('contain', 'Creation Time:')
         cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Status').should('contain', 'Status:')
         cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Service').should('contain', 'Service Type:')
         cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Classification').should('contain', 'Classification:')
         cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Work Type').should('contain', 'Work Type:')
         cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Priority').should('contain', 'Priority Level:')
-        cy.get('div[class="sc-ewDcJz TEBtv"]').contains('Child'). should('contain', 'Child Work Requests:')
+        cy.get('div[class="sc-ewDcJz TEBtv"]').contains('Child').should('contain', 'Child Work Requests:')
         cy.get('div[class="sc-ewDcJz jZnTTx"]').contains('Location').should('contain', 'Location:')
         cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Target Start').should('contain', 'Target Start:')
         cy.get('div[class="sc-ewDcJz hynhWm"]').contains('Target Finish').should('contain', 'Target Finish:')
@@ -331,53 +331,53 @@ describe("Client Portal", function(){
 
     })
 
-    it('Ckeck styles', () =>{
+    it('Ckeck styles', () => {
         cy.visit('/')
 
         signIn()
-        
+
         //  Navigation menu
         cy.get('div[class="sc-fVLGaz hSTNxA"]')
-          .should('contain', 'Home')
-        cy.get('nav[class="sc-bgrGEg cMzWIl"]').then( navigationMenu => {
-          cy.wrap(navigationMenu)
-            .should('have.css', 'background-color', 'rgb(250, 250, 250)')
-            .should('have.css', 'border-right', '0.8px solid rgb(230, 230, 230)')
-          cy.wrap(navigationMenu).find('a').each(button => {
-            cy.wrap(button).find('label').should('have.css', 'font-size', '14px')
-          })
-          cy.wrap(navigationMenu).find('a[class="sc-iMJOuO egWhhn active"]')
-            .find('div')
-            .should('have.css', 'background-color', 'rgb(129, 193, 125)')
-            .find('label')
-            .should('have.css', 'color', 'rgb(255, 255, 255)')
-          cy.wrap(navigationMenu).find('a[class="sc-iMJOuO egWhhn"]').each( inactiveButton => {
-            cy.wrap(inactiveButton)
-            .find('div')
-            .should('not.have.css', 'background-color', 'rgb(129, 193, 125)')
-            .find('label')
-            .should('have.css', 'color', 'rgb(108, 108, 108)')
-          })
-    
-          //  Header
-          cy.get('.cMKwJU').should('have.css', 'background', 'rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box')
-            .and('have.css', 'border-bottom', '0.8px solid rgb(232, 232, 232)')
-    
-          //  Footer
-          let year = new Date().getFullYear()
-          console.log(year)
-          let footerText = 'Copyright ' +year+ ' Kleenway Building Maintenance Inc. | All Rights Reserved'
-          console.log(footerText)
-    
-          cy.get('footer')
-            .should('have.css', 'background-color', 'rgb(249, 249, 249)')
-            .find('label')
-            .should('contain', footerText)
-            .should('have.css', 'font-size', '10px')
-            .and('have.css', 'color', 'rgb(180, 180, 180)')
-    
+            .should('contain', 'Home')
+        cy.get('nav[class="sc-bgrGEg cMzWIl"]').then(navigationMenu => {
+            cy.wrap(navigationMenu)
+                .should('have.css', 'background-color', 'rgb(250, 250, 250)')
+                .should('have.css', 'border-right', '0.8px solid rgb(230, 230, 230)')
+            cy.wrap(navigationMenu).find('a').each(button => {
+                cy.wrap(button).find('label').should('have.css', 'font-size', '14px')
+            })
+            cy.wrap(navigationMenu).find('a[class="sc-iMJOuO egWhhn active"]')
+                .find('div')
+                .should('have.css', 'background-color', 'rgb(129, 193, 125)')
+                .find('label')
+                .should('have.css', 'color', 'rgb(255, 255, 255)')
+            cy.wrap(navigationMenu).find('a[class="sc-iMJOuO egWhhn"]').each(inactiveButton => {
+                cy.wrap(inactiveButton)
+                    .find('div')
+                    .should('not.have.css', 'background-color', 'rgb(129, 193, 125)')
+                    .find('label')
+                    .should('have.css', 'color', 'rgb(108, 108, 108)')
+            })
+
+            //  Header
+            cy.get('.cMKwJU').should('have.css', 'background', 'rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box')
+                .and('have.css', 'border-bottom', '0.8px solid rgb(232, 232, 232)')
+
+            //  Footer
+            let year = new Date().getFullYear()
+            console.log(year)
+            let footerText = 'Copyright ' + year + ' Kleenway Building Maintenance Inc. | All Rights Reserved'
+            console.log(footerText)
+
+            cy.get('footer')
+                .should('have.css', 'background-color', 'rgb(249, 249, 249)')
+                .find('label')
+                .should('contain', footerText)
+                .should('have.css', 'font-size', '10px')
+                .and('have.css', 'color', 'rgb(180, 180, 180)')
+
         })
-      })
+    })
 
     it('Create a Work Request', () => {
         cy.visit('/')
@@ -414,7 +414,7 @@ describe("Client Portal", function(){
         cy.contains('button', 'Confirm').should('be.disabled')
         cy.reload()
 
-        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, {force:true})
+        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, { force: true })
         cy.contains('div', 'Work Type:').find('span').click()
         cy.get('div[style="display: block; z-index: 1000; position: relative; overflow-y: initial; max-height: 270px;"]')
             .find('div')
@@ -434,9 +434,9 @@ describe("Client Portal", function(){
         cy.contains('button', 'Confirm').should('be.disabled')
         cy.reload()
 
-        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, {force:true})
+        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, { force: true })
         cy.contains('div', 'Work Request Name:').find('input')
-        cy.contains('div', 'Classification:').find('span').click()        
+        cy.contains('div', 'Classification:').find('span').click()
         cy.contains('div', 'Work Type:').find('span').click()
         cy.get('div[style="display: block; z-index: 1000; position: relative; overflow-y: initial; max-height: 270px;"]')
             .find('div')
@@ -456,7 +456,7 @@ describe("Client Portal", function(){
         cy.contains('button', 'Confirm').should('be.disabled')
         cy.reload()
 
-        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, {force:true})
+        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, { force: true })
         cy.contains('div', 'Work Request Name:').find('input')
         cy.contains('div', 'Classification:').find('span').click()
         cy.get('div[style="display: block; z-index: 1000; position: relative; overflow-y: initial; max-height: 270px;"]')
@@ -477,7 +477,7 @@ describe("Client Portal", function(){
         cy.contains('button', 'Confirm').should('be.disabled')
         cy.reload()
 
-        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, {force:true})
+        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, { force: true })
         cy.contains('div', 'Work Request Name:').find('input')
         cy.contains('div', 'Classification:').find('span').click()
         cy.get('div[style="display: block; z-index: 1000; position: relative; overflow-y: initial; max-height: 270px;"]')
@@ -498,7 +498,7 @@ describe("Client Portal", function(){
         cy.contains('button', 'Confirm').should('be.disabled')
         cy.reload()
 
-        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, {force:true})
+        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, { force: true })
         cy.contains('div', 'Work Request Name:').find('input')
         cy.contains('div', 'Classification:').find('span').click()
         cy.get('div[style="display: block; z-index: 1000; position: relative; overflow-y: initial; max-height: 270px;"]')
@@ -519,7 +519,7 @@ describe("Client Portal", function(){
         cy.contains('button', 'Confirm').should('be.disabled')
         cy.reload()
 
-        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, {force:true})
+        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, { force: true })
         cy.contains('div', 'Work Request Name:').find('input')
         cy.contains('div', 'Classification:').find('span').click()
         cy.get('div[style="display: block; z-index: 1000; position: relative; overflow-y: initial; max-height: 270px;"]')
@@ -545,7 +545,7 @@ describe("Client Portal", function(){
         cy.reload()
 
         // fill out all fields and Confirm
-        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, {force:true})
+        cy.contains('div', 'Work Request Name').find('input').type(woNameNew, { force: true })
         cy.contains('div', 'Work Request Name:').find('input')
         cy.contains('div', 'Classification:').find('span').click()
         cy.get('div[style="display: block; z-index: 1000; position: relative; overflow-y: initial; max-height: 270px;"]')
