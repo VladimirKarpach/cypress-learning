@@ -189,11 +189,12 @@ describe('Client Portal', () => {
 
         })
 
-        it.only('Cretae New Work Requst', () => {
+        it('Cretae New Work Requst', () => {
 
             onPageElement.goToWorkOrders()
             onPageElement.selectTileByName('Janitorial')
 
+            //Fill out all fieds
             onPageElement.findInputByPlaceholderAndTypeText('Enter Work Request Name', 'Test')
             onPageElement.findInputByContentlderAndSelect('Select Classification')
             onPageElement.selectOptionFromDropdown()
@@ -203,7 +204,6 @@ describe('Client Portal', () => {
             onPageElement.selectOptionFromDropdown()
             cy.get('[placeholder="Select Location"]').click({force:true})
             cy.get('.sc-jWEIYm').find('li').eq(0).click({force:true})
-
 
         })
     })
