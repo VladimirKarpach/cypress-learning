@@ -189,7 +189,21 @@ describe('Client Portal', () => {
 
         })
 
-        it('Cretae New Work Requst', () => {
+        it.only('Cretae New Work Requst', () => {
+
+            onPageElement.goToWorkOrders()
+            onPageElement.selectTileByName('Janitorial')
+
+            onPageElement.findInputByPlaceholderAndTypeText('Enter Work Request Name', 'Test')
+            onPageElement.findInputByContentlderAndSelect('Select Classification')
+            onPageElement.selectOptionFromDropdown()
+            onPageElement.findInputByContentlderAndSelect('Select Work Type')
+            onPageElement.selectOptionFromDropdown()
+            onPageElement.findInputByContentlderAndSelect('Select Priority Level')
+            onPageElement.selectOptionFromDropdown()
+            cy.get('[placeholder="Select Location"]').click({force:true})
+            cy.get('.sc-jWEIYm').find('li').eq(0).click({force:true})
+
 
         })
     })
