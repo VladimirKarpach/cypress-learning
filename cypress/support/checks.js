@@ -47,6 +47,7 @@ export class checks{
     findWorkRequest(workRequestName){
         onPageElement.findInputByPlaceholderAndTypeText('Search', workRequestName)
         cy.get('button').contains('Search').click()
+        cy.wait(2000)
         cy.get('tr.sc-bxSTMQ').should('contain', workRequestName)
     }
 

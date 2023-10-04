@@ -1,5 +1,4 @@
 
-
 export class pageElements{
 
     alertMessage(message){
@@ -32,7 +31,7 @@ export class pageElements{
     }
 
     goToWorkOrders(){
-        cy.get('nav').find('a').contains('Work Requests').click()
+        cy.get('nav', {timeout: 10000}).find('a').contains('Work Requests').click()
     }
 
     selectTileByName(text){
@@ -56,6 +55,13 @@ export class pageElements{
 
     findToggleButton(){
         cy.get('.custom-toggle')
+    }
+
+    selectWorkRequest(placeholder, workRequestName){
+        this.findInputByPlaceholderAndTypeText(placeholder, workRequestName)
+        cy.get('button').contains('Search').click()
+        cy.wait(2000)
+        cy.get('tr.sc-bxSTMQ').should('contain', workRequestName).eq(0).click()
     }
 
 }

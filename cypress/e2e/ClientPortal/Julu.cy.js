@@ -227,7 +227,7 @@ describe('Client Portal', () => {
             
         })
 
-        it.only('Chekc service types questins', () => {
+        it('Chekc service types questins', () => {
 
             onPageElement.goToWorkOrders()
             onPageElement.selectTileByName('Janitorial')
@@ -239,6 +239,12 @@ describe('Client Portal', () => {
             onCheck.checkCheckbox()
             onCheck.checkDatepicker()
         
+        })
+
+        it.only('Check that created Work Request displayed correctly', () => {
+            onPageElement.goToWorkOrders()
+            onPageElement.selectWorkRequest('Search', 'Parent Work Request')
+            
         })
 
 
