@@ -14,6 +14,34 @@ function checkRadioUp(index){
     }
 }
 
+function checkCheckboxUpChecking(index){
+    if(index < 4){
+        cy.get('.custom-checkbox').find('input').eq(index + 1).should('not.be.checked')
+        checkCheckboxUpChecking(index + 1)                 
+    }
+}
+
+function checkCheckboxDownChecking(index){
+    if(index > 0){
+        cy.get('.custom-checkbox').find('input').eq(index - 1).should('be.checked')
+        checkCheckboxDownChecking(index - 1)                 
+    }
+}
+
+function checkCheckboxUpUnchecking(index){
+    if(index < 4){
+        cy.get('.custom-checkbox').find('input').eq(index + 1).should('be.checked')
+        checkCheckboxUpUnchecking(index + 1)                 
+    }
+}
+
+function checkCheckboxDownUnchecking(index){
+    if(index > 0){
+        cy.get('.custom-checkbox').find('input').eq(index - 1).should('not.be.checked')
+        checkCheckboxDownUnchecking(index - 1)                 
+    }
+}
+
 export class checks{
     
     findWorkRequest(workRequestName){
@@ -47,6 +75,66 @@ export class checks{
     checkInput(text){
         cy.get('[placeholder="Enter answer"]').type(text, {force:true})
         cy.get('input[placeholder="Enter answer"]').should('have.value', text)
+    }
+
+    checkCheckbox(){
+        cy.get('.custom-checkbox').each((checkbox, index) => {
+            cy.wrap(checkbox).find('input').check({force:true})
+
+            checkCheckboxUpChecking(index)
+            checkCheckboxDownChecking(index)
+
+        })
+
+        cy.get('.custom-checkbox').each((checkbox, index) => {
+            cy.wrap(checkbox).find('input').uncheck({force:true})
+
+            checkCheckboxUpUnchecking(index)
+            checkCheckboxDownUnchecking(index)
+
+        })
+    }
+
+    checkDatepicker(){
+        let currentTime = new Date()
+
+        let currYear = currentTime.getFullYear()
+        let currMonth = currentTime.getMonth() + 1
+        let currDay = currentTime.getDate()
+        let currHour = currentTime.getHours() % 12 || 12
+        let currMinute = currentTime.getMinutes()
+        let currSecond = currentTime.getSeconds()
+
+        //Fill out fields and check it's filled
+        cy.get('.react-datetime-picker__inputGroup__year').clear().type(currYear)
+        cy.get('.react-datetime-picker__inputGroup__year').should('have.value', currYear)
+
+        cy.get('.react-datetime-picker__inputGroup__month').clear().type(currMonth)
+        cy.get('.react-datetime-picker__inputGroup__month').should('have.value', currMonth)
+
+        cy.get('.react-datetime-picker__inputGroup__day').clear().type(currDay)
+        cy.get('.react-datetime-picker__inputGroup__day').should('have.value', currDay)
+        
+        cy.get('.react-datetime-picker__inputGroup__hour').clear().type(currHour)
+        cy.get('.react-datetime-picker__inputGroup__hour').should('have.value', currHour)
+
+        cy.get('.react-datetime-picker__inputGroup__minute').clear().type(currMinute)
+        cy.get('.react-datetime-picker__inputGroup__minute').should('have.value', currMinute)
+
+        cy.get('.react-datetime-picker__inputGroup__second').clear().type(currSecond)
+        cy.get('.react-datetime-picker__inputGroup__second').should('have.value', currSecond)
+
+        cy.get('.react-datetime-picker__inputGroup__amPm').select('AM')
+        cy.get('.react-datetime-picker__inputGroup__amPm').should('have.value', 'am')
+
+        //Clear fields and check it's cleared
+        cy.get('.react-datetime-picker__button').click()
+        cy.get('.react-datetime-picker__inputGroup__year').should('have.value', '')
+        cy.get('.react-datetime-picker__inputGroup__month').should('have.value', '')
+        cy.get('.react-datetime-picker__inputGroup__day').should('have.value', '')
+        cy.get('.react-datetime-picker__inputGroup__hour').should('have.value', '')
+        cy.get('.react-datetime-picker__inputGroup__minute').should('have.value', '')
+        cy.get('.react-datetime-picker__inputGroup__second').should('have.value', '')
     }
 }
 

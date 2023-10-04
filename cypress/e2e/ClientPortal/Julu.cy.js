@@ -236,6 +236,8 @@ describe('Client Portal', () => {
             onCheck.checkTextArea('Tets text for the Text area')
             onCheck.checkRadiobuttons()
             onCheck.checkInput('Test text for the Input')
+            onCheck.checkCheckbox()
+            onCheck.checkDatepicker()
         
         })
 
