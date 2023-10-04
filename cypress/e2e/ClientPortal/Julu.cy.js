@@ -2,6 +2,7 @@
 
 import { signInTo, signOutFrom } from "../../support/signInOut"
 import { onPageElement, pageElements } from "../../support/pageElements"
+import { checks, onCheck } from "../../support/checks"
 
 let errorMessages = {
     wrongPassword: 'The entered password is incorrect. Please try again.',
@@ -121,6 +122,7 @@ describe('Client Portal', () => {
             onPageElement.confirmPassword(passwords.correctNewPassword)
             onPageElement.submit()
             onPageElement.alertMessage(errorMessages.WrongCurrentPassword)
+            cy.reload()
 
             //Wrong New Password. Only lowercase and numbers
             onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
@@ -128,6 +130,7 @@ describe('Client Portal', () => {
             onPageElement.confirmPassword(passwords.wrongLowercasseNumbersOnly)
             onPageElement.submit()
             onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
 
             //Wrong New Password. Only uooercase and numbers
             onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
@@ -135,6 +138,7 @@ describe('Client Portal', () => {
             onPageElement.confirmPassword(passwords.wrongUppercaseNumbersOnly)
             onPageElement.submit()
             onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
 
             //Wrong New Password. No numbers
             onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
@@ -142,6 +146,7 @@ describe('Client Portal', () => {
             onPageElement.confirmPassword(passwords.worngWithoutNumbers)
             onPageElement.submit()
             onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
 
             ////Wrong New Password. Only numbers
             onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
@@ -149,6 +154,7 @@ describe('Client Portal', () => {
             onPageElement.confirmPassword(passwords.wrongOnlyNumbes)
             onPageElement.submit()
             onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
 
             //Wrong New Password. Three same letter in the line
             onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
@@ -156,6 +162,7 @@ describe('Client Portal', () => {
             onPageElement.confirmPassword(passwords.wrongThreeSameInRow)
             onPageElement.submit()
             onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
 
             //Wrong New Password. Contains First Name
             onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
@@ -163,6 +170,7 @@ describe('Client Portal', () => {
             onPageElement.confirmPassword(passwords.wrongFirstNameIncluded)
             onPageElement.submit()
             onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
 
             //Wrong New Password. Contains Last Name
             onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
@@ -170,6 +178,7 @@ describe('Client Portal', () => {
             onPageElement.confirmPassword(passwords.wrongLastNameIncluded)
             onPageElement.submit()
             onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
 
             //Wrong Confirmation Password
             onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
@@ -192,10 +201,14 @@ describe('Client Portal', () => {
         it('Cretae New Work Requst', () => {
 
             onPageElement.goToWorkOrders()
-            onPageElement.selectTileByName('Janitorial')
+            onPageElement.selectTileByName('Water System')
 
-            //Fill out all fieds
-            onPageElement.findInputByPlaceholderAndTypeText('Enter Work Request Name', 'Test')
+
+            let workRequestName ='Work Request ' + (Math.random() * 1000)
+            console.log (workRequestName)
+
+            //Fill out all fieds and submit
+            onPageElement.findInputByPlaceholderAndTypeText('Enter Work Request Name', workRequestName)
             onPageElement.findInputByContentlderAndSelect('Select Classification')
             onPageElement.selectOptionFromDropdown()
             onPageElement.findInputByContentlderAndSelect('Select Work Type')
@@ -204,8 +217,29 @@ describe('Client Portal', () => {
             onPageElement.selectOptionFromDropdown()
             cy.get('[placeholder="Select Location"]').click({force:true})
             cy.get('.sc-jWEIYm').find('li').eq(0).click({force:true})
+            onPageElement.findInputByPlaceholderAndTypeText('Enter Description', 'Test Description')
+            cy.contains('button', 'Confirm').trigger('click')
+            cy.get('label.sc-dZeWys').click()
+            cy.contains('button', 'Submit').click()
 
+            //Verify the Work Request was added
+            onCheck.findWorkRequest(workRequestName)
+            
         })
+
+        it.only('Chekc service types questins', () => {
+
+            onPageElement.goToWorkOrders()
+            onPageElement.selectTileByName('Janitorial')
+
+            onCheck.checkToogleButtons()
+            onCheck.checkTextArea('Tets text for the Text area')
+            onCheck.checkRadiobuttons()
+            onCheck.checkInput('Test text for the Input')
+        
+        })
+
+
     })
 
 
