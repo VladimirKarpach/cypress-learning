@@ -36,12 +36,12 @@ export class pageElements{
     }
 
     selectTileByName(text){
-        cy.get('[class="sc-gSAPjG fmhsUf"]').contains(text).click()
+        cy.get('[class="sc-gSAPjG fmhsUf"]', {timeout:5000}).contains(text).click()
     }
 
     findInputByPlaceholderAndTypeText(palceholder, text){
 
-        cy.get(`[placeholder="${palceholder}"]`).type(text, {force:true})
+        cy.get(`[placeholder="${palceholder}"]:visible`, {timeout: 10000}).type(text, {force:true})
     }
 
     findInputByContentlderAndSelect(palceholder){
@@ -53,6 +53,11 @@ export class pageElements{
     selectOptionFromDropdown(){
         cy.get('[class="sc-hRwTwm dGIepr"]').find('div').eq(0).click({force:true})
     }
+
+    findToggleButton(){
+        cy.get('.custom-toggle')
+    }
+
 }
 
 export const onPageElement = new pageElements()
