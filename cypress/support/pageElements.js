@@ -61,7 +61,7 @@ export class pageElements{
         this.findInputByPlaceholderAndTypeText(placeholder, workRequestName)
         cy.get('button').contains('Search').click()
         cy.wait(2000)
-        cy.get('tr.sc-bxSTMQ').should('contain', workRequestName).eq(0).click()
+        cy.contains('tr', workRequestName).click()
     }
 
 }

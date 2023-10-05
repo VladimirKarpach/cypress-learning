@@ -137,6 +137,33 @@ export class checks{
         cy.get('.react-datetime-picker__inputGroup__minute').should('have.value', '')
         cy.get('.react-datetime-picker__inputGroup__second').should('have.value', '')
     }
+
+    chekcFieldContentByContent(fieldName, fieldContent){
+        cy.contains('div', fieldName).should('contain', fieldContent)
+    }
+
+    chekcFieldContentByValue(fieldName, fieldContent){
+        cy.contains('div', fieldName).find('input').should('have.value', fieldContent)
+    }
+
+    chekcFieldContentWhithImage(fieldName, imageSequence, fieldContent){
+        cy.contains('div', fieldName).find('img').eq(imageSequence).should('have.attr', 'src', fieldContent)
+    }
+
+    sendCommentAndCheck(commentText){
+
+        commentText = commentText + Math.random()
+
+        cy.get('.sc-hCDzWh').find('textarea').click().type(commentText)
+        cy.contains('button', 'Cancel').click()
+        cy.get('.ql-editor').each(comment => {
+            cy.wrap(comment).should('not.contain', commentText)
+        })
+        cy.get('.sc-hCDzWh').find('textarea').click().type(commentText)
+        cy.contains('button', 'Save').click()
+        cy.wait(5000)
+        cy.get('.ql-editor').should('contain', commentText)
+    }
 }
 
-export const onCheck = new checks()
+export const check = new checks()
