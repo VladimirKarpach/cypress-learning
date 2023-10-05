@@ -227,7 +227,7 @@ describe('Client Portal', () => {
             
         })
 
-        it('Chekc service types questins', () => {
+        it('Chekc service types questions', () => {
 
             onPageElement.goToWorkOrders()
             onPageElement.selectTileByName('Janitorial')
@@ -241,7 +241,7 @@ describe('Client Portal', () => {
         
         })
 
-        it.only('Check that created Work Request displayed correctly', () => {
+        it('Check that created Work Request displayed correctly', () => {
             onPageElement.goToWorkOrders()
             onPageElement.selectWorkRequest('Search', 'Parent Work Request')
             check.chekcFieldContentByContent('Work Request Name:', 'WO3296: Parent Work Request')
@@ -278,6 +278,8 @@ describe('Client Portal', () => {
             check.chekcFieldContentWhithImage('Technician Photos:', 1, 'https://us-central1-kleenway-development.cloudfunctions.net/clientPortal-getMaximoAttachment?workorderid=3943&attachmentId=2252&fileName=istockphoto-517188688-612x612.jpg')
             
             check.sendCommentAndCheck('Test comment ')
+
+            check.redirectionToChildAndParentTikcets()
         })
 
 

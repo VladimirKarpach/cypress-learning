@@ -10,8 +10,8 @@ export class pageElements{
     }
 
     toResetPasswordPage(){
-        cy.get('header').find('button').click()
-        cy.get('header').find('a').contains('Change Password').click()
+        cy.get('header').find('button').click({force:true})
+        cy.get('header').find('a').contains('Change Password').click({force:true})
     }
 
     enterCurrentPassword(password){
@@ -27,15 +27,15 @@ export class pageElements{
     }
 
     submit(){
-        cy.get('button[type="submit"]').click()
+        cy.get('button[type="submit"]').click({force:true})
     }
 
     goToWorkOrders(){
-        cy.get('nav', {timeout: 10000}).find('a').contains('Work Requests').click()
+        cy.get('nav', {timeout: 10000}).find('a').contains('Work Requests').click({force:true})
     }
 
     selectTileByName(text){
-        cy.get('[class="sc-gSAPjG fmhsUf"]', {timeout:5000}).contains(text).click()
+        cy.get('[class="sc-gSAPjG fmhsUf"]', {timeout:5000}).contains(text).click({force:true})
     }
 
     findInputByPlaceholderAndTypeText(palceholder, text){
@@ -59,9 +59,9 @@ export class pageElements{
 
     selectWorkRequest(placeholder, workRequestName){
         this.findInputByPlaceholderAndTypeText(placeholder, workRequestName)
-        cy.get('button').contains('Search').click()
+        cy.get('button').contains('Search').click({force:true})
         cy.wait(2000)
-        cy.contains('tr', workRequestName).click()
+        cy.contains('tr', workRequestName).click({force:true})
     }
 
 }

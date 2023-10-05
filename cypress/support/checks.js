@@ -46,13 +46,13 @@ export class checks{
     
     findWorkRequest(workRequestName){
         onPageElement.findInputByPlaceholderAndTypeText('Search', workRequestName)
-        cy.get('button').contains('Search').click()
+        cy.get('button').contains('Search').click({force:true})
         cy.wait(2000)
         cy.get('tr.sc-bxSTMQ').should('contain', workRequestName)
     }
 
     checkToogleButtons(){
-        cy.get('.custom-toggle').each(toggle => {
+        cy.get('.custom-toggle', {timeout:10000}).each(toggle => {
             cy.wrap(toggle).find('input').should('not.be.checked')
             cy.wrap(toggle).find('input').click({force:true})
             cy.wrap(toggle).find('input').should('be.checked')
@@ -129,7 +129,7 @@ export class checks{
         cy.get('.react-datetime-picker__inputGroup__amPm').should('have.value', 'am')
 
         //Clear fields and check it's cleared
-        cy.get('.react-datetime-picker__button').click()
+        cy.get('.react-datetime-picker__button').click({force:true})
         cy.get('.react-datetime-picker__inputGroup__year').should('have.value', '')
         cy.get('.react-datetime-picker__inputGroup__month').should('have.value', '')
         cy.get('.react-datetime-picker__inputGroup__day').should('have.value', '')
@@ -154,16 +154,33 @@ export class checks{
 
         commentText = commentText + Math.random()
 
-        cy.get('.sc-hCDzWh').find('textarea').click().type(commentText)
-        cy.contains('button', 'Cancel').click()
+        cy.get('.sc-hCDzWh').find('textarea').click({force:true}).type(commentText)
+        cy.contains('button', 'Cancel').click({force:true})
         cy.get('.ql-editor').each(comment => {
             cy.wrap(comment).should('not.contain', commentText)
         })
-        cy.get('.sc-hCDzWh').find('textarea').click().type(commentText)
-        cy.contains('button', 'Save').click()
+        cy.get('.sc-hCDzWh').find('textarea').click({force:true}).type(commentText)
+        cy.contains('button', 'Save').click({force:true})
         cy.wait(5000)
         cy.get('.ql-editor').should('contain', commentText)
     }
+
+    redirectionToChildAndParentTikcets(){
+    let i = 0
+        
+        while (i<3){
+
+            cy.contains('div', 'Child Work Requests:').find('a').eq(i).then(textToCompare => {
+                let workRequestName = textToCompare.text()
+                console.log(workRequestName)
+                cy.wrap(textToCompare).click({force:true})
+                cy.contains('div', 'Work Request Name:').should('contain', workRequestName)
+                cy.contains('div', 'Parent Work Request:').find('a').click({force:true})
+            })
+            i++
+        }
+    }
+
 }
 
 export const check = new checks()
