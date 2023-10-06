@@ -181,6 +181,10 @@ export class checks{
         }
     }
 
+    userName(userName){
+        cy.get('header').find('button').should('contain', userName)
+    }
+
 }
 
 export const check = new checks()

@@ -40,17 +40,15 @@ let passwords = {
     wrongOnlyNumbes: '12345678',
     wrongThreeSameInRow: 'TestPasss1',
     wrongFirstNameIncluded: 'CypressPass1',
-    wrongLastNameIncluded: 'AutoPass1',
+    wrongLastNameIncludedClientPortal: 'AutoPass1',
+    wrongLastNameIncludedManagerPortal: 'ManagerPass1',
     worngLessEightCharacters: 'TestPa1',
     wrong: 'blablabla'
 }
-let clientUserName = 'Cypress Auto'
 
+let clientPortalUserName = 'Cypress Auto'
+let managerPortalUserName = 'Cypress Manager'
 
-
-
-let woName = 'Parent Work Request'
-let woNameNew = 'Test Work Request'
 
 describe('Client Portal', () => {
 
@@ -63,13 +61,13 @@ describe('Client Portal', () => {
         cy.visit('/')
     })
 
-    describe('Log In and Reset Paswordss tests', () => {
+    describe('Login and Passwod Resseting tests', () => {
 
     
         it('Sign In With Correct Credentials', () => {
     
             signInTo.clientPortal(userEmails.correctClienPortal, passwords.correctCleintPortal)
-            cy.get('header').find('button').should('contain', clientUserName)
+            check.userName(clientPortalUserName)
     
         })
     
@@ -174,8 +172,8 @@ describe('Client Portal', () => {
 
             //Wrong New Password. Contains Last Name
             onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
-            onPageElement.enterNewPassword(passwords.wrongLastNameIncluded)
-            onPageElement.confirmPassword(passwords.wrongLastNameIncluded)
+            onPageElement.enterNewPassword(passwords.wrongLastNameIncludedClientPortal)
+            onPageElement.confirmPassword(passwords.wrongLastNameIncludedClientPortal)
             onPageElement.submit()
             onPageElement.alertMessage(errorMessages.errorWrongNewPass)
             cy.reload()
@@ -285,5 +283,141 @@ describe('Client Portal', () => {
 
     })
 
+
+})
+
+describe('Manager Portal', () => {
+
+    //ignoring errors in console
+    Cypress.on('uncaught:exception', (err, runnable) => {
+        return false
+    })
+
+    beforeEach('Open Application', () => {
+        cy.visit('/')
+    })
+
+    describe('Login and Passwod Resseting tests', () => {
+
+        it('Sign in with correct credentials', () => {
+            signInTo.managerPOrtal(userEmails.correctManagerPortal, passwords.correctManagerPOrtal)
+            check.userName(managerPortalUserName)
+        })
+
+        it('Sign in with wrong credentials', () => {
+            signInTo.managerPOrtal(userEmails.wrong, passwords.correctManagerPOrtal)
+            onPageElement.alertMessage(errorMessages.emailNotFound)
+
+            signInTo.managerPOrtal(userEmails.correctManagerPortal, passwords.wrong)
+            onPageElement.alertMessage(errorMessages.wrongPassword)
+
+            signInTo.managerPOrtal(userEmails.notManagerOrCliet, passwords.correctNotManagerOrCliet)
+            onPageElement.alertMessage(errorMessages.onlyManagersOrClients)
+
+        })
+        
+        it('Reset password. Correct input', () => {
+            signInTo.managerPOrtal(userEmails.correctManagerPortal, passwords.correctManagerPOrtal)
+            onPageElement.toResetPasswordPage()
+
+            onPageElement.enterCurrentPassword(passwords.correctManagerPOrtal)
+            onPageElement.enterNewPassword(passwords.correctNewPassword)
+            onPageElement.confirmPassword(passwords.correctNewPassword)
+            onPageElement.submit()
+            onPageElement.successMessage(successMessage.PasswordChanged)
+            signOutFrom.managerPortal()
+
+            signInTo.managerPOrtal(userEmails.correctManagerPortal, passwords.correctManagerPOrtal)
+            onPageElement.alertMessage(errorMessages.wrongPassword)
+
+            signInTo.managerPOrtal(userEmails.correctManagerPortal, passwords.correctNewPassword)
+            check.userName(managerPortalUserName)
+            onPageElement.toResetPasswordPage()
+
+            onPageElement.enterCurrentPassword(passwords.correctNewPassword)
+            onPageElement.enterNewPassword(passwords.correctManagerPOrtal)
+            onPageElement.confirmPassword(passwords.correctManagerPOrtal)
+            onPageElement.submit()
+            onPageElement.successMessage(successMessage.PasswordChanged)
+            signOutFrom.managerPortal()
+    
+        })
+
+        it('Reset passwrd. Wrong input', () => {
+            signInTo.managerPOrtal(userEmails.correctManagerPortal, passwords.correctManagerPOrtal)
+            onPageElement.toResetPasswordPage()
+
+            //Wrong Current Password
+            onPageElement.enterCurrentPassword(passwords.wrong)
+            onPageElement.enterNewPassword(passwords.correctNewPassword)
+            onPageElement.confirmPassword(passwords.correctNewPassword)
+            onPageElement.submit()
+            onPageElement.alertMessage(errorMessages.WrongCurrentPassword)
+            cy.reload()
+
+            //Wrong New Password. Only lowercase and numbers
+            onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
+            onPageElement.enterNewPassword(passwords.wrongLowercasseNumbersOnly)
+            onPageElement.confirmPassword(passwords.wrongLowercasseNumbersOnly)
+            onPageElement.submit()
+            onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
+
+            //Wrong New Password. Only uooercase and numbers
+            onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
+            onPageElement.enterNewPassword(passwords.wrongUppercaseNumbersOnly)
+            onPageElement.confirmPassword(passwords.wrongUppercaseNumbersOnly)
+            onPageElement.submit()
+            onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
+
+            //Wrong New Password. No numbers
+            onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
+            onPageElement.enterNewPassword(passwords.worngWithoutNumbers)
+            onPageElement.confirmPassword(passwords.worngWithoutNumbers)
+            onPageElement.submit()
+            onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
+
+            ////Wrong New Password. Only numbers
+            onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
+            onPageElement.enterNewPassword(passwords.wrongOnlyNumbes)
+            onPageElement.confirmPassword(passwords.wrongOnlyNumbes)
+            onPageElement.submit()
+            onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
+
+            //Wrong New Password. Three same letter in the line
+            onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
+            onPageElement.enterNewPassword(passwords.wrongThreeSameInRow)
+            onPageElement.confirmPassword(passwords.wrongThreeSameInRow)
+            onPageElement.submit()
+            onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
+
+            //Wrong New Password. Contains First Name
+            onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
+            onPageElement.enterNewPassword(passwords.wrongFirstNameIncluded)
+            onPageElement.confirmPassword(passwords.wrongFirstNameIncluded)
+            onPageElement.submit()
+            onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
+
+            //Wrong New Password. Contains Last Name
+            onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
+            onPageElement.enterNewPassword(passwords.wrongLastNameIncludedManagerPortal)
+            onPageElement.confirmPassword(passwords.wrongLastNameIncludedManagerPortal)
+            onPageElement.submit()
+            onPageElement.alertMessage(errorMessages.errorWrongNewPass)
+            cy.reload()
+
+            //Wrong Confirmation Password
+            onPageElement.enterCurrentPassword(passwords.correctCleintPortal)
+            onPageElement.enterNewPassword(passwords.correctNewPassword)
+            onPageElement.confirmPassword(passwords.wrongUppercaseNumbersOnly)
+            onPageElement.submit()
+            onPageElement.alertMessage(errorMessages.errorConfirmationPassMismatch)
+        })
+    })
 
 })
