@@ -166,9 +166,19 @@ export class checks{
     }
 
     redirectionToChildAndParentTikcets(){
-    let i = 0
+    cy.wait(2000)
+    
+    cy.get('@workOrder').then(xhr => {
+        console.log('This is the reuest content', xhr)
+
+        let numberOfChildTickets = xhr.response.body.result.data.workOrder.wochildren.length
         
-        while (i<3){
+        console.log('Number of orders = ', numberOfChildTickets)
+
+        
+        let i = 0
+        
+        while (i < numberOfChildTickets){
 
             cy.contains('div', 'Child Work Requests:').find('a').eq(i).then(textToCompare => {
                 let workRequestName = textToCompare.text()
@@ -179,6 +189,11 @@ export class checks{
             })
             i++
         }
+
+    })
+    
+    
+    
     }
 
     userName(userName){
